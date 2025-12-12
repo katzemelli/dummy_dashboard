@@ -175,6 +175,50 @@ fig_bullet.update_layout(
 # ================================
 # DASH LAYOUT
 # ================================
+
+# creating function for stress test
+def create_time_chart():
+    fig_time = go.Figure()
+
+    time_categories = [
+        'Unbezahlte Arbeit',
+        'Erwerbstätigkeit & Bildung',
+        'Freizeit',
+        'Schlafen & Körperpflege'
+    ]
+
+    # Convert hours and minutes to decimal hours for easier plotting
+    women_time = [3 + 56/60, 2 + 39/60, 5 + 55/60, 9 + 43/60]
+    men_time = [2 + 46/60, 3 + 40/60, 6 + 23/60, 9 + 28/60]
+
+    fig_time.add_trace(go.Bar(
+        name='Frauen',
+        x=time_categories,
+        y=women_time,
+        marker=dict(color='#b3fa9d')
+    ))
+
+    fig_time.add_trace(go.Bar(
+        name='Männer',
+        x=time_categories,
+        y=men_time,
+        marker=dict(color='#cb1dcd')
+    ))
+
+    fig_time.update_layout(
+        title='Durchschnittstag: Zeitverwendung (Stunden)',
+        xaxis_title='Aktivität',
+        yaxis_title='Stunden pro Tag',
+        barmode='group',
+        plot_bgcolor=colors['background'],
+        paper_bgcolor=colors['background'],
+        font_color=colors['text'],
+        height=400,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    return fig_time
+# end of function for stress test
+
 app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
 
     html.H1(
@@ -212,6 +256,18 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
             dcc.Graph(id='time-chart', figure=fig_time)
         ], style={'width': '48%', 'display': 'inline-block', 'float': 'right'})
     ]),
+    
+    # === REPLICATED DAILY TIME USE BAR CHART 30× ===
+    html.Div([ html.H2("Stress Test – 30× 'Durchschnittstag' Charts", 
+            style={'color': colors['text'], 'textAlign': 'center'}),
+        *[
+        dcc.Graph(
+            id=f"time-chart-{i}",
+            figure=create_time_chart(),
+            style={'marginBottom': '40px'}
+        )
+        for i in range(30)]
+    ])
     
 ])
 
