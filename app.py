@@ -1,5 +1,6 @@
 from dash import Dash, dcc, html
 import plotly.graph_objects as go
+import os
 
 app = Dash()
 
@@ -214,5 +215,6 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
     
 ])
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port, debug=False)
